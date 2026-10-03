@@ -10,8 +10,10 @@ WORKDIR /app
 COPY package.json pnpm-lock.yaml ./
 
 # Instalar todas las dependencias (incluyendo devDependencies para el build)
-# --config.minimumReleaseAge=0 evita el error ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION
-RUN pnpm install --frozen-lockfile --config.minimumReleaseAge=0
+# --config.minimumReleaseAge=0 evita ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION
+# --allow-build evita ERR_PNPM_IGNORED_BUILDS para paquetes con binarios nativos
+RUN pnpm install --frozen-lockfile --config.minimumReleaseAge=0 \
+    --allow-build=@parcel/watcher,@swc/core,unrs-resolver
 
 # Copiar el resto del código fuente
 COPY . .
@@ -28,7 +30,8 @@ WORKDIR /app
 
 # Solo copiar lo necesario para producción
 COPY package.json pnpm-lock.yaml ./
-RUN pnpm install --frozen-lockfile --prod --config.minimumReleaseAge=0
+RUN pnpm install --frozen-lockfile --prod --config.minimumReleaseAge=0 \
+    --allow-build=@parcel/watcher,@swc/core,unrs-resolver
 
 COPY --from=builder /app/dist ./dist
 

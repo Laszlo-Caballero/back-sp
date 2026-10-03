@@ -1,39 +1,27 @@
 # ─── Stage 1: Build ───────────────────────────────────────────────────────────
 FROM node:22-alpine AS builder
 
-# Instalar pnpm
-RUN corepack enable && corepack prepare pnpm@latest --activate
-
 WORKDIR /app
 
-# Copiar manifiesto de dependencias
-COPY package.json pnpm-lock.yaml ./
+COPY package.json ./
 
-# Instalar todas las dependencias (incluyendo devDependencies para el build)
-# --config.minimumReleaseAge=0 evita ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION
-# Los scripts de build nativos se permiten via package.json > pnpm.onlyBuiltDependencies
-RUN pnpm install --frozen-lockfile --config.minimumReleaseAge=0
+RUN npm install
 
-# Copiar el resto del código fuente
 COPY . .
 
-# Compilar TypeScript → dist/
-RUN pnpm run build
+RUN npm run build
 
 # ─── Stage 2: Production ──────────────────────────────────────────────────────
 FROM node:22-alpine AS production
 
-RUN corepack enable && corepack prepare pnpm@latest --activate
-
 WORKDIR /app
 
-# Solo copiar lo necesario para producción
-COPY package.json pnpm-lock.yaml ./
-RUN pnpm install --frozen-lockfile --prod --config.minimumReleaseAge=0
+COPY package.json ./
+
+RUN npm install --omit=dev
 
 COPY --from=builder /app/dist ./dist
 
-# Puerto que expone la app (debe coincidir con PORT en .env o el default 3000)
 EXPOSE 3000
 
 CMD ["node", "dist/main"]

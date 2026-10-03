@@ -183,4 +183,12 @@ export class VotosService {
       metadata,
     };
   }
+
+  async getResumenGeneral() {
+    const sp = 'exec usp_ReporteVotosPorMesa';
+
+    const result = await this.dataSource.query(sp);
+
+    return result;
+  }
 }

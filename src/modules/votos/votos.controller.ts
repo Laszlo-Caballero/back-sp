@@ -48,4 +48,9 @@ export class VotosController {
   resumen(@Query() dto: QueryDto) {
     return this.votosService.resumen(dto);
   }
+
+  @Get('resumen-general')
+  getResumenGeneral() {
+    return this.votosService.getResumenGeneral();
+  }
 }

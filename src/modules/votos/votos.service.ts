@@ -59,7 +59,7 @@ export class VotosService {
       date.setHours(date.getHours() - 5);
 
       await queryRunner.manager.insert(EscrutinioMesa, {
-        NumeroMesa: nroMesa.toString(),
+        NumeroMesa: nroMesa,
         VotosBlancos: votosBlanco,
         VotosNulos: votosNulos,
         VotosImpugnados: votosImpugnados,
@@ -83,7 +83,7 @@ export class VotosService {
           }
 
           return queryRunner.manager.insert(VotosCandidato, {
-            NumeroMesa: nroMesa.toString(),
+            NumeroMesa: nroMesa,
             IdCandidato: findPartido.candidatos[0].IdCandidato,
             CantidadVotos: cantidad,
           });
@@ -103,24 +103,24 @@ export class VotosService {
     }
   }
 
-  async verActaCerrada(nroMesa: number) {
+  async verActaCerrada(nroMesa: string) {
     const acta = await this.escrutinioMesaRepository.findOne({
-      where: { NumeroMesa: nroMesa.toString() },
+      where: { NumeroMesa: nroMesa },
       select: {
         NumeroMesa: true,
       },
     });
 
-    return { nroMesa: acta?.NumeroMesa || 0 };
+    return { nroMesa: acta?.NumeroMesa || '' };
   }
 
-  async getActas(nroMesa: number) {
+  async getActas(nroMesa: string) {
     return this.imagenesPlanilloneRepository.find({
-      where: { NumeroMesa: nroMesa.toString() },
+      where: { NumeroMesa: nroMesa },
     });
   }
 
-  async subirActas(files: Express.Multer.File[], nroMesa: number) {
+  async subirActas(files: Express.Multer.File[], nroMesa: string) {
     const uploadedFiles = await Promise.all(
       files.map(async (file) => {
         const result = await this.cloudinaryService.uploadImage(file);
@@ -137,7 +137,7 @@ export class VotosService {
 
     const imagenes = uploadedFiles.map((file) => {
       const imagen = this.imagenesPlanilloneRepository.create({
-        NumeroMesa: nroMesa.toString(),
+        NumeroMesa: nroMesa,
         RutaArchivo: file.url,
         NombreOriginal: file.originalName,
         FechaSubida,

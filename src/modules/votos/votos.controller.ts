@@ -3,7 +3,6 @@ import {
   Controller,
   Get,
   Param,
-  ParseIntPipe,
   Post,
   Query,
   UploadedFiles,
@@ -28,7 +27,7 @@ export class VotosController {
   }
 
   @Get('ver-acta-cerrada/:nroMesa')
-  verActaCerrada(@Param('nroMesa', ParseIntPipe) nroMesa: number) {
+  verActaCerrada(@Param('nroMesa') nroMesa: string) {
     return this.votosService.verActaCerrada(nroMesa);
   }
 
@@ -36,13 +35,13 @@ export class VotosController {
   @UseInterceptors(FilesInterceptor('files'))
   subirActas(
     @UploadedFiles() files: Express.Multer.File[],
-    @Param('nroMesa', ParseIntPipe) nroMesa: number,
+    @Param('nroMesa') nroMesa: string,
   ) {
     return this.votosService.subirActas(files, nroMesa);
   }
 
   @Get('get-actas/:nroMesa')
-  getActas(@Param('nroMesa', ParseIntPipe) nroMesa: number) {
+  getActas(@Param('nroMesa') nroMesa: string) {
     return this.votosService.getActas(nroMesa);
   }
 

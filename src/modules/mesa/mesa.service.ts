@@ -9,9 +9,9 @@ export class MesaService {
     @InjectRepository(Mesa) private readonly mesaRepository: Repository<Mesa>,
   ) {}
 
-  async getMesaByNro(nroMesa: number) {
+  async getMesaByNro(nroMesa: string) {
     const mesa = await this.mesaRepository.findOne({
-      where: { Numero_Mesa: nroMesa.toString() },
+      where: { Numero_Mesa: nroMesa },
     });
 
     if (!mesa) {

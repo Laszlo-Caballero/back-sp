@@ -1,11 +1,4 @@
-import {
-  IsInt,
-  IsNumber,
-  IsObject,
-  IsString,
-  ValidateNested,
-} from 'class-validator';
-import { Type } from 'class-transformer';
+import { IsInt, IsObject, IsString } from 'class-validator';
 
 export class VotosPartidosDto {
   [key: string]: number;
@@ -30,6 +23,6 @@ export class RegistroVotosDto {
   @IsObject()
   votosPartidos: Record<string, number>;
 
-  @IsNumber()
-  nroMesa: number;
+  @IsString()
+  nroMesa: string;
 }

@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { PartidosService } from './partidos.service';
-import { Auth } from 'src/common/decorator/auth/auth.decorator';
+import { Auth } from '../../common/decorator/auth/auth.decorator';
 
 @Auth()
 @Controller('partidos')

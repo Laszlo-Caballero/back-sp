@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { JwtStrategy } from 'src/common/jwt/jwt.strategy';
+import { JwtStrategy } from '../../common/jwt/jwt.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Personero } from 'src/common/db/personero.entity';
+import { Personero } from '../../common/db/personero.entity';
 
 @Module({
   imports: [

@@ -1,8 +1,8 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Personero } from 'src/common/db/personero.entity';
-import { JwtPayload } from 'src/common/interfaces/interface';
+import { Personero } from '../../common/db/personero.entity';
+import { JwtPayload } from '../../common/interfaces/interface';
 import { Repository } from 'typeorm';
 import { LoginDto } from './dto/login.dto';
 import { compare } from 'bcryptjs';

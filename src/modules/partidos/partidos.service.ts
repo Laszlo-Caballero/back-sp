@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { PartidosPolitico } from 'src/common/db/partidos-politico.entity';
+import { PartidosPolitico } from '../../common/db/partidos-politico.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()

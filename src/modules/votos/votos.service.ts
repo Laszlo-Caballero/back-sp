@@ -2,13 +2,13 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { DataSource, In, Like, Repository } from 'typeorm';
 import { RegistroVotosDto } from './dto/registrar-votos.dto';
-import { JwtPayload } from 'src/common/interfaces/interface';
-import { EscrutinioMesa } from 'src/common/db/escrutinio-mesa.entity';
-import { VotosCandidato } from 'src/common/db/votos-candidato.entity';
-import { PartidosPolitico } from 'src/common/db/partidos-politico.entity';
-import { CloudinaryService } from 'src/common/cloudinary/cloudinary.service';
-import { ImagenesPlanillone } from 'src/common/db/imagenes-planillone.entity';
-import { Mesa } from 'src/common/db/mesa.entity';
+import { JwtPayload } from '../../common/interfaces/interface';
+import { EscrutinioMesa } from '../../common/db/escrutinio-mesa.entity';
+import { VotosCandidato } from '../../common/db/votos-candidato.entity';
+import { PartidosPolitico } from '../../common/db/partidos-politico.entity';
+import { CloudinaryService } from '../../common/cloudinary/cloudinary.service';
+import { ImagenesPlanillone } from '../../common/db/imagenes-planillone.entity';
+import { Mesa } from '../../common/db/mesa.entity';
 import { QueryDto } from './dto/query.dto';
 
 @Injectable()

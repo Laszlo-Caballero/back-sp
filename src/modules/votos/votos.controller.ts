@@ -8,10 +8,10 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { VotosService } from './votos.service';
-import { Auth } from 'src/common/decorator/auth/auth.decorator';
+import { Auth } from '../../common/decorator/auth/auth.decorator';
 import { RegistroVotosDto } from './dto/registrar-votos.dto';
-import { User } from 'src/common/decorator/user/user.decorator';
-import type { JwtPayload } from 'src/common/interfaces/interface';
+import { User } from '../../common/decorator/user/user.decorator';
+import type { JwtPayload } from '../../common/interfaces/interface';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { QueryDto } from './dto/query.dto';
 

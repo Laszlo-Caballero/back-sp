@@ -20,9 +20,6 @@ export class AuthService {
 
     const personero = await this.personeroRepository.findOne({
       where: { DNI: dni },
-      relations: {
-        mesa: true,
-      },
     });
 
     if (!personero) {

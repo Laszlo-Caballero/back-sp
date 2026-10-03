@@ -2,7 +2,6 @@ import { Request } from 'express';
 
 export interface JwtPayload {
   dni: string;
-  nroMesa: string;
   // role: RoleEnum;
   iat: number;
 }

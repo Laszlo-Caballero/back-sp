@@ -2,6 +2,8 @@ import {
   Body,
   Controller,
   Get,
+  Param,
+  ParseIntPipe,
   Post,
   Query,
   UploadedFiles,
@@ -25,23 +27,23 @@ export class VotosController {
     return this.votosService.registrarVotos(votos, user);
   }
 
-  @Get('ver-acta-cerrada')
-  verActaCerrada(@User() user: JwtPayload) {
-    return this.votosService.verActaCerrada(user);
+  @Get('ver-acta-cerrada/:nroMesa')
+  verActaCerrada(@Param('nroMesa', ParseIntPipe) nroMesa: number) {
+    return this.votosService.verActaCerrada(nroMesa);
   }
 
-  @Post('subir-actas')
+  @Post('subir-actas/:nroMesa')
   @UseInterceptors(FilesInterceptor('files'))
   subirActas(
     @UploadedFiles() files: Express.Multer.File[],
-    @User() user: JwtPayload,
+    @Param('nroMesa', ParseIntPipe) nroMesa: number,
   ) {
-    return this.votosService.subirActas(files, user);
+    return this.votosService.subirActas(files, nroMesa);
   }
 
-  @Get('get-actas')
-  getActas(@User() user: JwtPayload) {
-    return this.votosService.getActas(user);
+  @Get('get-actas/:nroMesa')
+  getActas(@Param('nroMesa', ParseIntPipe) nroMesa: number) {
+    return this.votosService.getActas(nroMesa);
   }
 
   @Get('resumen')

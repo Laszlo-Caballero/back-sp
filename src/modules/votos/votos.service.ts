@@ -38,6 +38,7 @@ export class VotosService {
       votosImpugnados,
       votosImpugnadosSp,
       votosPartidos,
+      nroMesa,
     } = votos;
 
     const idsPartidos = Object.keys(votosPartidos).map((id) => Number(id));
@@ -58,7 +59,7 @@ export class VotosService {
       date.setHours(date.getHours() - 5);
 
       await queryRunner.manager.insert(EscrutinioMesa, {
-        NumeroMesa: user.nroMesa,
+        NumeroMesa: nroMesa.toString(),
         VotosBlancos: votosBlanco,
         VotosNulos: votosNulos,
         VotosImpugnados: votosImpugnados,
@@ -82,7 +83,7 @@ export class VotosService {
           }
 
           return queryRunner.manager.insert(VotosCandidato, {
-            NumeroMesa: user.nroMesa,
+            NumeroMesa: nroMesa.toString(),
             IdCandidato: findPartido.candidatos[0].IdCandidato,
             CantidadVotos: cantidad,
           });
@@ -102,11 +103,9 @@ export class VotosService {
     }
   }
 
-  async verActaCerrada(user: JwtPayload) {
-    const { nroMesa } = user;
-
+  async verActaCerrada(nroMesa: number) {
     const acta = await this.escrutinioMesaRepository.findOne({
-      where: { NumeroMesa: nroMesa },
+      where: { NumeroMesa: nroMesa.toString() },
       select: {
         NumeroMesa: true,
       },
@@ -115,14 +114,13 @@ export class VotosService {
     return { nroMesa: acta?.NumeroMesa || 0 };
   }
 
-  async getActas(user: JwtPayload) {
-    const { nroMesa } = user;
+  async getActas(nroMesa: number) {
     return this.imagenesPlanilloneRepository.find({
-      where: { NumeroMesa: nroMesa },
+      where: { NumeroMesa: nroMesa.toString() },
     });
   }
 
-  async subirActas(files: Express.Multer.File[], user: JwtPayload) {
+  async subirActas(files: Express.Multer.File[], nroMesa: number) {
     const uploadedFiles = await Promise.all(
       files.map(async (file) => {
         const result = await this.cloudinaryService.uploadImage(file);
@@ -133,15 +131,13 @@ export class VotosService {
       }),
     );
 
-    const { nroMesa } = user;
-
     const FechaSubida = new Date();
 
     FechaSubida.setHours(FechaSubida.getHours() - 5); // Ajustar la fecha a la zona horaria de Lima
 
     const imagenes = uploadedFiles.map((file) => {
       const imagen = this.imagenesPlanilloneRepository.create({
-        NumeroMesa: nroMesa,
+        NumeroMesa: nroMesa.toString(),
         RutaArchivo: file.url,
         NombreOriginal: file.originalName,
         FechaSubida,

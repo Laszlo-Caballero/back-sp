@@ -6,6 +6,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PartidosModule } from './modules/partidos/partidos.module';
 import { VotosModule } from './modules/votos/votos.module';
+import { MesaModule } from './modules/mesa/mesa.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { VotosModule } from './modules/votos/votos.module';
     AuthModule,
     PartidosModule,
     VotosModule,
+    MesaModule,
   ],
   controllers: [AppController],
   providers: [AppService],

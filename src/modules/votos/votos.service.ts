@@ -108,10 +108,32 @@ export class VotosService {
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
+    const imagenes = await this.imagenesPlanilloneRepository.find({
+      where: { NumeroMesa: nroMesa },
+      select: {
+        IdImagen: true,
+        public_id: true,
+      },
+    });
+
     try {
       await queryRunner.manager.delete(ImagenesPlanillone, {
         NumeroMesa: nroMesa,
       });
+
+      if (imagenes.length > 0) {
+        const filtrados = imagenes.filter(
+          (imagen) => imagen.public_id !== null,
+        );
+
+        await Promise.all(
+          filtrados.map(async (imagen) => {
+            if (imagen.public_id) {
+              await this.cloudinaryService.deleteImage(imagen.public_id);
+            }
+          }),
+        );
+      }
 
       await queryRunner.manager.delete(VotosCandidato, {
         NumeroMesa: nroMesa,
@@ -154,12 +176,16 @@ export class VotosService {
     const uploadedFiles = await Promise.all(
       files.map(async (file) => {
         const result = await this.cloudinaryService.uploadImage(file);
+
         return {
+          secure_url: result.secure_url,
           originalName: file.originalname,
-          url: result.secure_url,
+          public_id: result.public_id,
         };
       }),
     );
+
+    console.log('Archivos subidos a Cloudinary:', uploadedFiles[0]);
 
     const FechaSubida = new Date();
 
@@ -168,9 +194,10 @@ export class VotosService {
     const imagenes = uploadedFiles.map((file) => {
       const imagen = this.imagenesPlanilloneRepository.create({
         NumeroMesa: nroMesa,
-        RutaArchivo: file.url,
+        RutaArchivo: file.secure_url,
         NombreOriginal: file.originalName,
         FechaSubida,
+        public_id: file.public_id,
       });
       return imagen;
     });

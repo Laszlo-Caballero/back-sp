@@ -24,4 +24,21 @@ export class CloudinaryService {
     });
     return res;
   }
+
+  async deleteImage(publicId: string): Promise<CloudinaryResponse> {
+    const res = await new Promise<CloudinaryResponse>((res, reject) => {
+      cloudinary.uploader.destroy(publicId, (error, result) => {
+        if (error || !result) {
+          return reject(
+            error instanceof Error
+              ? error
+              : new Error(error?.message ?? 'Cloudinary delete failed'),
+          );
+        }
+        res(result);
+      });
+    });
+
+    return res;
+  }
 }

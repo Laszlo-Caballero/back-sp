@@ -25,6 +25,9 @@ export class ImagenesPlanillone {
   @Column({ type: 'datetime', nullable: true })
   FechaSubida?: Date | null;
 
+  @Column({ type: 'varchar', length: 500, nullable: true })
+  public_id?: string | null;
+
   @ManyToOne(() => Mesa, (mesa) => mesa.imagenesPlanillones)
   @JoinColumn({ name: 'NumeroMesa' })
   mesa: Relation<Mesa>;

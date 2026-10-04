@@ -2,6 +2,7 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Mesa } from 'src/common/db/mesa.entity';
 import { Repository } from 'typeorm';
+import { MesaDto } from './dto/mesa.dto';
 
 @Injectable()
 export class MesaService {
@@ -19,5 +20,17 @@ export class MesaService {
     }
 
     return mesa;
+  }
+
+  async createMesa(createMesaDto: MesaDto) {
+    const { nroMesa, distrito, capacidad } = createMesaDto;
+
+    const newMesa = this.mesaRepository.create({
+      Numero_Mesa: nroMesa,
+      Distrito: distrito,
+      Electores_Por_Mesa: capacidad,
+    });
+
+    return await this.mesaRepository.save(newMesa);
   }
 }

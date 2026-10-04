@@ -5,7 +5,7 @@ import { Personero } from '../../common/db/personero.entity';
 import { JwtPayload } from '../../common/interfaces/interface';
 import { Repository } from 'typeorm';
 import { LoginDto } from './dto/login.dto';
-import { compare } from 'bcryptjs';
+import { compare, hash } from 'bcryptjs';
 
 @Injectable()
 export class AuthService {
@@ -15,35 +15,33 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
+  private passwordHashed =
+    '$2b$10$YFut40wG4NQgF3MOw01ee.nhXuZEINfwP1i0fjUib0xInBpzN7o.q';
+
   async login(dto: LoginDto) {
     const { dni, password } = dto;
 
-    const personero = await this.personeroRepository.findOne({
-      where: { DNI: dni },
-    });
-
-    if (!personero) {
-      throw new HttpException('Usuario no encontrado', 404);
-    }
-
-    const isPasswordValid = await compare(password, personero.Contrasena || '');
+    const isPasswordValid = await compare(password, this.passwordHashed || '');
 
     if (!isPasswordValid) {
       throw new HttpException('Usuario no encontrado', 401);
     }
 
+    const role = dni === 'admin' ? 'admin' : 'user';
+
     const payload = {
-      dni: personero.DNI,
-      nroMesa: personero.mesa?.Numero_Mesa || '',
+      dni,
+      role,
     };
 
     const token = this.jwtService.sign(payload);
 
-    delete personero.Contrasena;
-
     return {
       token,
-      user: personero,
+      user: {
+        dni,
+        role,
+      },
     };
   }
 }

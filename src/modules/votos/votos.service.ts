@@ -103,6 +103,36 @@ export class VotosService {
     }
   }
 
+  async deleteVotos(nroMesa: string) {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      await queryRunner.manager.delete(ImagenesPlanillone, {
+        NumeroMesa: nroMesa,
+      });
+
+      await queryRunner.manager.delete(VotosCandidato, {
+        NumeroMesa: nroMesa,
+      });
+
+      await queryRunner.manager.delete(EscrutinioMesa, {
+        NumeroMesa: nroMesa,
+      });
+
+      await queryRunner.commitTransaction();
+      return { message: 'OK' };
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      if (error instanceof HttpException) {
+        throw error;
+      }
+
+      throw new HttpException('Error al eliminar los votos', 500);
+    }
+  }
+
   async verActaCerrada(nroMesa: string) {
     const acta = await this.escrutinioMesaRepository.findOne({
       where: { NumeroMesa: nroMesa },

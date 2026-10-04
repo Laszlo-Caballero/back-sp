@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -24,6 +25,11 @@ export class VotosController {
   @Post('registrar')
   registrarVotos(@Body() votos: RegistroVotosDto, @User() user: JwtPayload) {
     return this.votosService.registrarVotos(votos, user);
+  }
+
+  @Delete('delete/:nroMesa')
+  async deleteVotos(@Param('nroMesa') nroMesa: string) {
+    return this.votosService.deleteVotos(nroMesa);
   }
 
   @Get('ver-acta-cerrada/:nroMesa')
